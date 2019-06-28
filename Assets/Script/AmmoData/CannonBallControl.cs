@@ -35,7 +35,7 @@ public class CannonBallControl : MonoBehaviour
         }
 
         //if collision target isnt shooter and isnt environment.
-        if (shooter != c.gameObject & !c.gameObject.tag.Equals("Environment"))
+        if (shooter != c.gameObject && !c.gameObject.tag.Equals("Environment"))
         {
             //destroys the CannonBall
             Destroy(this.gameObject);
@@ -44,3 +44,6 @@ public class CannonBallControl : MonoBehaviour
         }
     }
 }
+
+// "||" Logical "OR" statement, one or the other could be true to satisfy
+// "&&" Logical "AND" statement, both have to be true to satisfy

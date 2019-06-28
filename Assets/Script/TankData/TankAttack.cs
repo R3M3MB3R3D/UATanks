@@ -39,19 +39,31 @@ public class TankAttack : MonoBehaviour
     //at least, from CBControl when everything is set up properly.
     public void FireCannon()
     {
-        GameObject cannonBallCopy = Instantiate(CannonBall, new Vector3(transform.position.x, transform.position.y, transform.position.z), transform.rotation) as GameObject;
-        CannonBallControl cannonBallScript;
-        cannonBallScript = cannonBallCopy.GetComponent<CannonBallControl>();
-        cannonBallScript.shooter = this.gameObject;
+        if ((tankData.tankCannonCoolD >= tankData.tankCannonFireR) && (tankData.tankCannonAmmoCurrent > 0))
+        {
+            GameObject cannonBallCopy = Instantiate(CannonBall, new Vector3(transform.position.x, transform.position.y, transform.position.z), transform.rotation) as GameObject;
+            CannonBallControl cannonBallScript;
+            cannonBallScript = cannonBallCopy.GetComponent<CannonBallControl>();
+            cannonBallScript.shooter = this.gameObject;
+            tankData.tankCannonCoolD = 0;
+            tankData.tankCannonAmmoCurrent -= 1;
+            tankData.noiseLevel = 10;
+        }
     }
 
     public void FireGun()
     {
-        GameObject gunBallCopy = Instantiate(GunBall, new Vector3(transform.position.x, transform.position.y, transform.position.z), transform.rotation) as GameObject;
-        GunBallControl gunBallScript;
-        gunBallScript = gunBallCopy.GetComponent<GunBallControl>();
-        gunBallScript.shooter = this.gameObject;
-        //we 'can' take the "this." out of the code but I prefer to keep it in
-        //because we cant take "target." out when referrencing other scripts and objects.
+        if ((tankData.tankGunCoolD > .1) && (tankData.tankGunAmmoCurrent > 0))
+        {
+            GameObject gunBallCopy = Instantiate(GunBall, new Vector3(transform.position.x, transform.position.y, transform.position.z), transform.rotation) as GameObject;
+            GunBallControl gunBallScript;
+            gunBallScript = gunBallCopy.GetComponent<GunBallControl>();
+            gunBallScript.shooter = this.gameObject;
+            tankData.tankGunCoolD = 0;
+            tankData.tankGunAmmoCurrent -= 1;
+            tankData.noiseLevel = 7;
+            //we 'can' take the "this." out of the code but I prefer to keep it in
+            //because we cant take "target." out when referrencing other scripts and objects.
+        }
     }
 }

@@ -160,6 +160,9 @@ MonoBehaviour:
   tankAttack: {fileID: 0}
   tankLife: {fileID: 0}
   tankMove: {fileID: 0}
+  target: {fileID: 890267883}
+  viewDistance: 10
+  fieldOfView: 90
   currentPerson: 0
   currentState: 0
   currentAvoid: 0
@@ -225,12 +228,8 @@ MonoBehaviour:
   tankCannonFireR: 0
   tankCannonCoolD: 0
   tankGunCoolD: 0
-  tankGunFireR: 0
-  visionDistance: 0
-  fieldOfView: 0
-  soundDistance: 0
   noiseLevel: 0
-  wallDistance: 0
+  hitBox: 0
   lives: 0
   tankScore: 0
 --- !u!65 &122309031
@@ -299,7 +298,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 122309026}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5, y: 1, z: 5}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -532,12 +531,8 @@ MonoBehaviour:
   tankCannonFireR: 0
   tankCannonCoolD: 0
   tankGunCoolD: 0
-  tankGunFireR: 0
-  visionDistance: 0
-  fieldOfView: 0
-  soundDistance: 0
   noiseLevel: 0
-  wallDistance: 0
+  hitBox: 0
   lives: 0
   tankScore: 0
 --- !u!114 &890267888
@@ -619,7 +614,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 890267883}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalPosition: {x: 5, y: 1, z: 5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}

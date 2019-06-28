@@ -11,7 +11,7 @@ using UnityEngine;
 
 public class InputControl : MonoBehaviour
 {
-    public enum ControlScheme {WASD,NUMP}
+    public enum ControlScheme { WASD, NUMP }
     public ControlScheme controlScheme;
 
     public TankData tankData;
@@ -54,25 +54,16 @@ public class InputControl : MonoBehaviour
                 tankData.move.Rotate(tankData.tankRotateSpeed * Time.deltaTime);
             }
             //Gun
-            if (tankData.tankGunAmmoCurrent > 0)
+            if (Input.GetKeyDown(KeyCode.E))
             {
-                if (Input.GetKeyDown(KeyCode.E))
-                {
-                    //Debug.Log("Gun FIRE!");
-                    tankData.attack.FireGun();
-                    tankData.tankGunAmmoCurrent -= 1;
-                }
+                //Debug.Log("Gun FIRE!");
+                tankData.attack.FireGun();
             }
             //Cannon
-            if ((tankData.tankCannonCoolD >= tankData.tankCannonFireR) & (tankData.tankCannonAmmoCurrent > 0))
+            if (Input.GetKeyDown(KeyCode.Q))
             {
-                if (Input.GetKeyDown(KeyCode.Q))
-                {
-                    //Debug.Log("Cannon FIRE!");
-                    tankData.attack.FireCannon();
-                    tankData.tankCannonCoolD = 0;
-                    tankData.tankCannonAmmoCurrent -= 1;
-                }   
+                //Debug.Log("Cannon FIRE!");
+                tankData.attack.FireCannon();
             }
         }
         else if (controlScheme == ControlScheme.NUMP)
@@ -102,21 +93,16 @@ public class InputControl : MonoBehaviour
                 tankData.move.Rotate(tankData.tankRotateSpeed * Time.deltaTime);
             }
             //Cannon
-            if ((tankData.tankCannonCoolD >= tankData.tankCannonFireR) & (tankData.tankCannonAmmoCurrent > 0))
+            if (Input.GetKey(KeyCode.Keypad7))
             {
-                if (Input.GetKey(KeyCode.Keypad7))
-                {
-                    //Debug.Log("Gun FIRE!");
-                    tankData.attack.FireCannon();
-                    tankData.tankCannonAmmoCurrent -= 1;
-                }
+                //Debug.Log("Gun FIRE!");
+                tankData.attack.FireCannon();
             }
             //Gun
             if (Input.GetKey(KeyCode.Keypad9))
             {
                 //Debug.Log("Gun FIRE!");
                 tankData.attack.FireGun();
-                tankData.tankGunAmmoCurrent -= 1;
             }
         }
         tankData.move.Move(directionToMove);

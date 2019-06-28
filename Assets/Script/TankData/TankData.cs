@@ -45,11 +45,8 @@ public class TankData : MonoBehaviour
     //seeing, so that AI tanks can "see" and "hear" other tanks
     //(and walls) so that they can interact with them a little 
     //bit better.
-    public float visionDistance;
-    public float fieldOfView;
-    public float soundDistance;
     public float noiseLevel;
-    public float wallDistance;
+    public float hitBox;
 
     //Creating variables for score and enemies destroyed,
     //in order to create a leaderboard and other objects.

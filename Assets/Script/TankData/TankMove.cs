@@ -23,6 +23,7 @@ public class TankMove : MonoBehaviour
     {
         //This tells the CharacterController component to move the tank.
         characterController.SimpleMove(DirectionToMove * tankData.tankForwardSpeed);
+        tankData.noiseLevel = 5;
     }
 
     //This should be the function called in order to rotate any tank
@@ -30,6 +31,7 @@ public class TankMove : MonoBehaviour
     public void Rotate(float direction)
     { 
         tankData.tf.Rotate(new Vector3(0, direction * tankData.tankRotateSpeed * Time.deltaTime, 0));
+        tankData.noiseLevel = 3;
     }
 
     //This will be used by the AI tanks to properly face player tanks
@@ -37,10 +39,10 @@ public class TankMove : MonoBehaviour
     public void RotateToward(Vector3 lookVector)
     {
         //Basically, using vectors, find the target.
-        Vector3 vectorToTarget = lookVector;
+        Vector3 vectorToTarget = lookVector - transform.position;
         //Basically, using vectors, determine which Quaternion we need.
-        Quaternion targetQuaternion = Quaternion.LookRotation(vectorToTarget, Vector3.up);
+        Quaternion targetQuat = Quaternion.LookRotation(vectorToTarget);
         //Rotate towards the determined Quaternion.
-        tankData.tf.rotation = Quaternion.RotateTowards(tankData.tf.rotation, targetQuaternion, tankData.tankRotateSpeed * Time.deltaTime);
+        tankData.tf.rotation = Quaternion.RotateTowards(tankData.tf.rotation, targetQuat, tankData.tankRotateSpeed * Time.deltaTime);
     }
 }
