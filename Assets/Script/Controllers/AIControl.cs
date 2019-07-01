@@ -15,79 +15,6 @@ public class AIControl : MonoBehaviour
     //Creating a variable for the targetting of the player
     public GameObject target;
 
-    //Creating the variables we will need to provide the
-    //AI with the semblance of sight, these are what we
-    //are going to need to accomplish that.
-    public float viewDistance;
-    [Range(0, 360)]
-    public float fieldOfView;
-
-    //This will help us determine whether or not the AI "saw"
-    //the player and decide whether or not the AI will move into
-    //Pursue or Retreat states based on that fact.
-    public bool inLineOfSight()
-    {
-        Debug.Log("Im looking");
-        //Using a raycast, we will determine where the AI is and where
-        //the player is, respective to each other.
-        Vector3 vectorToTarget = target.transform.position - transform.position;
-        RaycastHit hitInfo;
-        Debug.DrawRay(transform.position, transform.forward * viewDistance, Color.red);
-        Physics.Raycast(transform.position, vectorToTarget, out hitInfo, viewDistance);
-        float angle = Vector3.Angle(vectorToTarget, transform.forward / 2);
-
-
-        //if there is no hitInfo, the AI didn't see anything.
-        if (hitInfo.collider == null)
-        {
-            return false;
-        }
-
-        //IF the position is within the FOV, IF the position is within view distance,
-        //IF the hitInfo is a Player, THEN the AI has "seen" the player.
-        if (angle <= fieldOfView)
-        {
-            if (Vector3.Distance(transform.position, target.transform.position) < viewDistance)
-            {
-                if (hitInfo.collider.gameObject.GetComponent<InputControl>() == target.GetComponent<InputControl>())
-                {
-                    Debug.Log("I SEE YOU!!!");
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    //This will help us determine whether or not the AI "heard" the player
-    //and decide whether or not the AI will move into Pursue or Retreat
-    //states based on that fact.
-    public bool listeningForNoise()
-    {
-        //if there's no noise, the AI didn't hear anything.
-        if (target.GetComponent<TankData>().noiseLevel <= 0)
-        {
-            return false;
-        }
-        else
-        {
-            //Basically, sound is compared to distance and if its more than 0
-            //the AI "heard" the player, and the bool returns true.
-            float noiseLevel = target.GetComponent<TankData>().noiseLevel;
-            float distance = Vector3.Distance(transform.position, target.gameObject.transform.position);
-            noiseLevel -= distance;
-            if (noiseLevel >= 1)
-            {
-                Debug.Log("I HEAR YOU!!!");
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-    }
-
     //AIPerson will be the way our AI acts in game, we will
     //have them spawn with a random looptype so that the 
     //game is never exactly the same.
@@ -125,6 +52,79 @@ public class AIControl : MonoBehaviour
     public bool isForward;
     public float feelerDistance;
 
+    //Creating the variables we will need to provide the
+    //AI with the semblance of sight, these are what we
+    //are going to need to accomplish that.
+    public float viewDistance;
+    [Range(0, 360)]
+    public float fieldOfView;
+
+    //This will help us determine whether or not the AI "saw"
+    //the player and decide whether or not the AI will move into
+    //Pursue or Retreat states based on that fact.
+    public bool inLineOfSight()
+    {
+        //Debug.Log("Im looking");
+        //Using a raycast, we will determine where the AI is and where
+        //the player is, respective to each other.
+        Vector3 vectorToTarget = target.transform.position - transform.position;
+        RaycastHit hitInfo;
+        Debug.DrawRay(transform.position, transform.forward * viewDistance, Color.red);
+        Physics.Raycast(transform.position, vectorToTarget, out hitInfo, viewDistance);
+        float angle = Vector3.Angle(vectorToTarget, transform.forward / 2);
+
+
+        //if there is no hitInfo, the AI didn't see anything.
+        if (hitInfo.collider == null)
+        {
+            return false;
+        }
+
+        //IF the position is within the FOV, IF the position is within view distance,
+        //IF the hitInfo is a Player, THEN the AI has "seen" the player.
+        if (angle <= fieldOfView)
+        {
+            if (Vector3.Distance(transform.position, target.transform.position) < viewDistance)
+            {
+                if (hitInfo.collider.gameObject.GetComponent<InputControl>() == target.GetComponent<InputControl>())
+                {
+                    //Debug.Log("I SEE YOU!!!");
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    //This will help us determine whether or not the AI "heard" the player
+    //and decide whether or not the AI will move into Pursue or Retreat
+    //states based on that fact.
+    public bool listeningForNoise()
+    {
+        //if there's no noise, the AI didn't hear anything.
+        if (target.GetComponent<TankData>().noiseLevel <= 0)
+        {
+            return false;
+        }
+        else
+        {
+            //Basically, sound is compared to distance and if its more than 0
+            //the AI "heard" the player, and the bool returns true.
+            float noiseLevel = target.GetComponent<TankData>().noiseLevel;
+            float distance = Vector3.Distance(transform.position, target.gameObject.transform.position);
+            noiseLevel -= distance;
+            if (noiseLevel >= 1)
+            {
+                //Debug.Log("I HEAR YOU!!!");
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+    }
+
     private void Awake()
     {
         tankData = GetComponent<TankData>();
@@ -161,12 +161,24 @@ public class AIControl : MonoBehaviour
         stateHandler();
     }
 
+    public void Seek(Transform target)
+    {
+        Vector3 targetVector = (target.position - tankData.tf.position).normalized;
+        tankData.move.RotateToward(targetVector);
+        tankData.move.Move(Vector3.forward);
+    }
+
     //When the AI has sensed the player, it will move
     //into pursuit mode, where it will move towards and
     //attack the player.
     protected void Pursue()
     {
-
+        if (inLineOfSight() || listeningForNoise())
+        {
+            tankMove.RotateToward(target.transform.position);
+            tankMove.Move(target.transform.position * Time.deltaTime);
+            tankAttack.FireCannon();
+        }
     }
 
     //Watches and listens for the player, and attacks the
@@ -186,7 +198,19 @@ public class AIControl : MonoBehaviour
     //patrol along.
     protected void Patrol()
     {
-
+        //Find a waypoint
+        Seek(waypoints[currentWaypoint]);
+        if (Vector3.Distance(tankData.tf.position, waypoints[currentWaypoint].position) <= cutOff)
+        {
+            if (isForward)
+            {
+                currentWaypoint++;
+            }
+            else
+            {
+                currentWaypoint--;
+            }
+        }
     }
 
     //At a certain threshoold of health, the AI will move into

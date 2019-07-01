@@ -12,12 +12,12 @@ public class TankAttack : MonoBehaviour
     public GameObject GunBall;
     public TankData tankData;
 
-    void Awake()
+    private void Awake()
     {
         tankData = this.gameObject.GetComponent<TankData>();
     }
 
-    void Update()
+    private void Update()
     {
         //This is so that we never have more cannon ammo than we
         //are allowed to carry, this can happen with the ammo pickup.
@@ -53,7 +53,7 @@ public class TankAttack : MonoBehaviour
 
     public void FireGun()
     {
-        if ((tankData.tankGunCoolD > .1) && (tankData.tankGunAmmoCurrent > 0))
+        if ((tankData.tankGunCoolD > .25) && (tankData.tankGunAmmoCurrent > 0))
         {
             GameObject gunBallCopy = Instantiate(GunBall, new Vector3(transform.position.x, transform.position.y, transform.position.z), transform.rotation) as GameObject;
             GunBallControl gunBallScript;

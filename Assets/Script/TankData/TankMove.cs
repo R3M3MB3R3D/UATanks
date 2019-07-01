@@ -11,7 +11,7 @@ public class TankMove : MonoBehaviour
     public TankData tankData;
     private CharacterController characterController;
 
-    void Awake()
+    private void Awake()
     {
         tankData = this.gameObject.GetComponent<TankData>();
         characterController = GetComponent<CharacterController>();
@@ -23,7 +23,7 @@ public class TankMove : MonoBehaviour
     {
         //This tells the CharacterController component to move the tank.
         characterController.SimpleMove(DirectionToMove * tankData.tankForwardSpeed);
-        tankData.noiseLevel = 5;
+        tankData.noiseLevel = 3;
     }
 
     //This should be the function called in order to rotate any tank

@@ -16,7 +16,6 @@ public class TankData : MonoBehaviour
     //in the inspector.  Reverse Speed should be painfully slow,
     //Rotation should be a bit better but not as good as forward.
     public float tankForwardSpeed;
-    public float tankReverseSpeed;
     public float tankRotateSpeed;
 
     //Creating variables for tank life and armor, editable
@@ -53,16 +52,19 @@ public class TankData : MonoBehaviour
     public int lives;
     public int tankScore;
 
-    private void Awake()
+    void Awake()
     {
         tf = GetComponent<Transform>();
         move = GetComponent<TankMove>();
         attack = GetComponent<TankAttack>();
         life = GetComponent<TankLife>();
 
-        tankForwardSpeed = 3;
-        tankReverseSpeed = 1;
-        tankRotateSpeed = 50;
+        //Removed Reverse Speed and just divided the speed
+        //by 3 when moving backwards, I would have to completely
+        //change Move and IController to keep and use the reverse
+        //variable.
+        tankForwardSpeed = 5;
+        tankRotateSpeed = 100;
 
         tankMaxLife = 100;
         tankCurrentLife = 100;
@@ -81,7 +83,7 @@ public class TankData : MonoBehaviour
         tankScore = 0;
     }
 
-    private void Update()
+    void Update()
     {
         //moved this out of TankAttack script since
         //it was referenced here anyway, working again.

@@ -39,7 +39,7 @@ public class InputControl : MonoBehaviour
             if (Input.GetKey(KeyCode.S))
             {
                 //Debug.Log("1P Input Reverse");
-                directionToMove += -tankData.tf.forward;
+                directionToMove += -tankData.tf.forward / 3;
             }
             //left
             if (Input.GetKey(KeyCode.A))
