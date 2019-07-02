@@ -38,9 +38,7 @@ public class TankMove : MonoBehaviour
     //from inside the game.
     public void RotateToward(Vector3 lookVector)
     {
-        //Basically, using vectors, find the target.
         Vector3 vectorToTarget = lookVector - transform.position;
-        //Basically, using vectors, determine which Quaternion we need.
         Quaternion targetQuat = Quaternion.LookRotation(vectorToTarget);
         //Rotate towards the determined Quaternion.
         tankData.tf.rotation = Quaternion.RotateTowards(tankData.tf.rotation, targetQuat, tankData.tankRotateSpeed * Time.deltaTime);

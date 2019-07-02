@@ -161,13 +161,6 @@ public class AIControl : MonoBehaviour
         stateHandler();
     }
 
-    public void Seek(Transform target)
-    {
-        Vector3 targetVector = (target.position - tankData.tf.position).normalized;
-        tankData.move.RotateToward(targetVector);
-        tankData.move.Move(Vector3.forward);
-    }
-
     //When the AI has sensed the player, it will move
     //into pursuit mode, where it will move towards and
     //attack the player.
@@ -176,7 +169,7 @@ public class AIControl : MonoBehaviour
         if (inLineOfSight() || listeningForNoise())
         {
             tankMove.RotateToward(target.transform.position);
-            tankMove.Move(target.transform.position * Time.deltaTime);
+            tankMove.Move((target.transform.position - tankData.tf.position) * (Time.deltaTime * tankData.tankForwardSpeed));
             tankAttack.FireCannon();
         }
     }
@@ -194,31 +187,19 @@ public class AIControl : MonoBehaviour
     }
 
     //Moves from point to point while watching and listening
-    //for the player.  *TODO set up waypoints for the AI to
-    //patrol along.
+    //for the player.  
     protected void Patrol()
     {
-        //Find a waypoint
-        Seek(waypoints[currentWaypoint]);
-        if (Vector3.Distance(tankData.tf.position, waypoints[currentWaypoint].position) <= cutOff)
-        {
-            if (isForward)
-            {
-                currentWaypoint++;
-            }
-            else
-            {
-                currentWaypoint--;
-            }
-        }
+
     }
 
     //At a certain threshoold of health, the AI will move into
     //retreat mode, where it will move away from the player as
     //best it can.
     protected void Retreat()
-    {
-
+    { 
+            tankMove.RotateToward(-(target.transform.position) - transform.position);
+            tankMove.Move(-((target.transform.position - tankData.tf.position) * (Time.deltaTime * tankData.tankForwardSpeed)));
     }
 
     //If the AI is not 100% on health and ammo, it will move into
